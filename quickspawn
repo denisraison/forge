@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -z "${1-}" ]; then
+  echo "Usage: quickspawn <project-name>"
+  exit 1
+fi
+
+PROJECT_NAME=$1
+
+# This will be replaced by Nix during the build process with the correct path.
+TEMPLATE_DIR="@template_dir@"
+
+# If the placeholder is not replaced, it means we are in development mode.
+# In that case, we find the template directory relative to the script.
+if [[ "$TEMPLATE_DIR" == "@template_dir@" ]]; then
+    SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+    TEMPLATE_DIR="$SCRIPT_DIR/template"
+fi
+
+if [ -d "$PROJECT_NAME" ]; then
+  echo "Error: Directory '$PROJECT_NAME' already exists."
+  exit 1
+fi
+
+# Copy the template directory to the new project directory
+cp -r "$TEMPLATE_DIR" "$PROJECT_NAME"
+
+echo "Successfully created '$PROJECT_NAME'."
+echo "Run 'cd $PROJECT_NAME && nix develop' to start."
