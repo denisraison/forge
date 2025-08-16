@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [ -z "${1-}" ]; then
-  echo "Usage: quickspawn <project-name>"
+  echo "Usage: forge <project-name>"
   exit 1
 fi
 

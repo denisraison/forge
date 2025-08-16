@@ -1,5 +1,5 @@
 {
-  description = "quickspawn";
+  description = "forge";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-25.05-darwin";
@@ -14,29 +14,29 @@
         pkgs = import nixpkgs { inherit system; };
       in
       {
-        packages.quickspawn = pkgs.stdenv.mkDerivation {
-          name = "quickspawn";
+        packages.forge = pkgs.stdenv.mkDerivation {
+          name = "forge";
           src = ./.;
 
           installPhase = ''
             mkdir -p $out/bin
-            mkdir -p $out/share/quickspawn
+            mkdir -p $out/share/forge
 
-            cp ./quickspawn $out/bin/quickspawn
-            cp -r ./template $out/share/quickspawn/template
+            cp ./forge $out/bin/forge
+            cp -r ./template $out/share/forge/template
 
-            substituteInPlace $out/bin/quickspawn \
-              --replace "@template_dir@" "$out/share/quickspawn/template"
+            substituteInPlace $out/bin/forge \
+              --replace "@template_dir@" "$out/share/forge/template"
           '';
         };
 
-        packages.default = self.packages.${system}.quickspawn;
+        packages.default = self.packages.${system}.forge;
 
-        apps.default = flake-utils.lib.mkApp { drv = self.packages.${system}.quickspawn; };
+        apps.default = flake-utils.lib.mkApp { drv = self.packages.${system}.forge; };
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
-            (self.packages.${system}.quickspawn)
+            (self.packages.${system}.forge)
           ];
         };
       }
