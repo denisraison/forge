@@ -32,5 +32,15 @@ mkdir "$PROJECT_NAME"
 cp -r "$TEMPLATE_DIR/." "$PROJECT_NAME/"
 chmod -R u+w "$PROJECT_NAME"
 
+# Extract package names from flake.nix and update description
+FLAKE_FILE="$PROJECT_NAME/flake.nix"
+if [ -f "$FLAKE_FILE" ]; then
+    if [ -n "$PROJECT_NAME" ]; then
+        DESCRIPTION="$PROJECT_NAME environment"
+        # Replace the empty description with the generated one
+        sed -i '' "s/description = \"\";/description = \"$DESCRIPTION\";/" "$FLAKE_FILE"
+    fi
+fi
+
 echo "Successfully created '$PROJECT_NAME'."
 echo "Run 'cd $PROJECT_NAME && nix develop' to start."

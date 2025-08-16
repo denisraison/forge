@@ -1,5 +1,5 @@
 {
-  description = "quickspawn";
+  description = "";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-25.05-darwin";
