@@ -13,7 +13,11 @@ TEMPLATE_DIR="@template_dir@"
 
 # If the placeholder is not replaced, it means we are in development mode.
 # In that case, we find the template directory relative to the script.
-if [[ "$TEMPLATE_DIR" == "@template_dir@" ]]; then
+# We construct the placeholder from parts to prevent Nix from substituting it.
+PLACEHOLDER_PART1="@template"
+PLACEHOLDER_PART2="_dir@"
+PLACEHOLDER="$PLACEHOLDER_PART1$PLACEHOLDER_PART2"
+if [[ "$TEMPLATE_DIR" == "$PLACEHOLDER" ]]; then
     SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
     TEMPLATE_DIR="$SCRIPT_DIR/template"
 fi
@@ -23,8 +27,10 @@ if [ -d "$PROJECT_NAME" ]; then
   exit 1
 fi
 
-# Copy the template directory to the new project directory
-cp -r "$TEMPLATE_DIR" "$PROJECT_NAME"
+# Create the project directory and copy the template files into it
+mkdir "$PROJECT_NAME"
+cp -r "$TEMPLATE_DIR/." "$PROJECT_NAME/"
+chmod -R u+w "$PROJECT_NAME"
 
 echo "Successfully created '$PROJECT_NAME'."
 echo "Run 'cd $PROJECT_NAME && nix develop' to start."

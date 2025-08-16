@@ -16,13 +16,14 @@
       {
         packages.forge = pkgs.stdenv.mkDerivation {
           name = "forge";
-          src = ./.;
+          src = self;
 
           installPhase = ''
             mkdir -p $out/bin
             mkdir -p $out/share/forge
 
-            cp ./forge $out/bin/forge
+            cp ./forge.in $out/bin/forge
+            chmod +x $out/bin/forge
             cp -r ./template $out/share/forge/template
 
             substituteInPlace $out/bin/forge \
