@@ -36,7 +36,6 @@
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
-            go_1_24
             (self.packages.${system}.quickspawn)
           ];
         };
